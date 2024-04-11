@@ -1,4 +1,7 @@
 import layers.ConvolutionLayer;
+
+import java.util.Arrays;
+
 import layers.BatchNormalization;
 import layers.ReLU;
 import layers.ResidualBlock;
@@ -32,7 +35,7 @@ public class Model {
         }
 
         globalAvgPooling = new GlobalAveragePooling();
-        fullyConnectedLayer = new FullyConnectedLayer(64 * inputSize * inputSize, numClasses); // Adjust input size and output size accordingly
+        fullyConnectedLayer = new FullyConnectedLayer(64, numClasses); // Adjust input size and output size accordingly
     }
 
     public double[] forward(double[][][] input) {
@@ -47,37 +50,19 @@ public class Model {
         }
 
         // Global average pooling
-        output = globalAvgPooling.forward(output);
-
-        // Flatten output
-        double[] flattenedOutput = flatten(output);
+        double[] pooledOutput = globalAvgPooling.forward(output);
 
         // Fully connected layer
-        return fullyConnectedLayer.forward(flattenedOutput);
-    }
-
-    private double[] flatten(double[][][] input) {
-        int depth = input.length;
-        int height = input[0].length;
-        int width = input[0][0].length;
-
-        double[] flattenedOutput = new double[depth * height * width];
-        int index = 0;
-        for (int d = 0; d < depth; d++) {
-            for (int h = 0; h < height; h++) {
-                for (int w = 0; w < width; w++) {
-                    flattenedOutput[index++] = input[d][h][w];
-                }
-            }
-        }
-        return flattenedOutput;
+        return fullyConnectedLayer.forward(pooledOutput);
     }
 
     public static void main(String[] args) {
-        // Example usage
-        Model model = new Model();
-        double[][][] input = new double[model.inputSize][model.inputSize][model.inputChannels]; // Adjust input size and input channels accordingly
-        double[] output = model.forward(input);
-        // Do something with the output...
-    }
+    // Example usage
+    Model model = new Model();
+    double[][][] input = new double[model.inputSize][model.inputSize][model.inputChannels]; // Adjust input size and input channels accordingly
+    double[] output = model.forward(input);
+    System.out.println("Output: " + Arrays.toString(output));
+    // Do something with the output...
+}
+
 }
