@@ -7,47 +7,45 @@ public class FullyConnectedLayer {
     private int outputSize;
     private double[][] weights;
     private double[] biases;
+    private Random random;
 
     public FullyConnectedLayer(int inputSize, int outputSize) {
         this.inputSize = inputSize;
         this.outputSize = outputSize;
-        this.weights = new double[outputSize][inputSize];
-        this.biases = new double[outputSize];
+        this.random = new Random();
 
-        // Initialize weights and biases randomly
+        // Initialize weights and biases with random values
         initializeWeights();
         initializeBiases();
     }
 
     private void initializeWeights() {
-        Random random = new Random();
-        for (int i = 0; i < outputSize; i++) {
-            for (int j = 0; j < inputSize; j++) {
-                weights[i][j] = random.nextDouble() * 0.01; // Initialize weights randomly
+        weights = new double[inputSize][outputSize];
+        for (int i = 0; i < inputSize; i++) {
+            for (int j = 0; j < outputSize; j++) {
+                // Initialize weights with random values between -1 and 1
+                weights[i][j] = random.nextDouble() * 2 - 1;
             }
         }
     }
 
     private void initializeBiases() {
-        Random random = new Random();
+        biases = new double[outputSize];
         for (int i = 0; i < outputSize; i++) {
-            biases[i] = random.nextDouble() * 0.01; // Initialize biases randomly
+            // Initialize biases with random values between -1 and 1
+            biases[i] = random.nextDouble() * 2 - 1;
         }
     }
 
     public double[] forward(double[] input) {
         double[] output = new double[outputSize];
-
-        // Perform matrix multiplication: output = weights * input + biases
-        for (int i = 0; i < outputSize; i++) {
-            double sum = 0.0;
-            for (int j = 0; j < inputSize; j++) {
-                sum += weights[i][j] * input[j];
+        for (int j = 0; j < outputSize; j++) {
+            double sum = 0;
+            for (int i = 0; i < inputSize; i++) {
+                sum += input[i] * weights[i][j];
             }
-            output[i] = sum + biases[i];
+            output[j] = sum + biases[j];
         }
-
         return output;
     }
 }
-
