@@ -1,3 +1,4 @@
+package layers;
 import java.util.Random;
 
 public class ConvolutionLayer {
