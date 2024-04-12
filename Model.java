@@ -56,13 +56,4 @@ public class Model {
         return fullyConnectedLayer.forward(pooledOutput);
     }
 
-    public static void main(String[] args) {
-    // Example usage
-    Model model = new Model();
-    double[][][] input = new double[model.inputSize][model.inputSize][model.inputChannels]; // Adjust input size and input channels accordingly
-    double[] output = model.forward(input);
-    System.out.println("Output: " + Arrays.toString(output));
-    // Do something with the output...
-}
-
 }

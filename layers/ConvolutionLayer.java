@@ -1,4 +1,5 @@
 package layers;
+
 import java.util.Random;
 
 public class ConvolutionLayer {
@@ -52,7 +53,10 @@ public class ConvolutionLayer {
                     for (int j = 0; j < inputChannels; j++) {
                         for (int k = 0; k < kernelSize; k++) {
                             for (int l = 0; l < kernelSize; l++) {
-                                sum += input[x + k][y + l][j] * weights[i][j][k][l];
+                                // Check bounds to prevent ArrayIndexOutOfBoundsException
+                                if (x + k < inputSize && y + l < inputSize) {
+                                    sum += input[x + k][y + l][j] * weights[i][j][k][l];
+                                }
                             }
                         }
                     }

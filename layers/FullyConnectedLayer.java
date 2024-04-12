@@ -1,50 +1,40 @@
 package layers;
 
-import java.util.Random;
-
 public class FullyConnectedLayer {
-    private int inputSize;
-    private int outputSize;
-    private double[][] weights;
+    private double[] weights;
     private double[] biases;
-    private Random random;
 
     public FullyConnectedLayer(int inputSize, int outputSize) {
-        this.inputSize = inputSize;
-        this.outputSize = outputSize;
-        this.random = new Random();
-
-        // Initialize weights and biases with random values
-        initializeWeights();
-        initializeBiases();
+        // Initialize weights and biases
+        weights = new double[inputSize * outputSize];
+        biases = new double[outputSize];
+        initializeWeights(weights);
+        initializeBiases(biases);
     }
 
-    private void initializeWeights() {
-        weights = new double[inputSize][outputSize];
-        for (int i = 0; i < inputSize; i++) {
-            for (int j = 0; j < outputSize; j++) {
-                // Initialize weights with random values between -1 and 1
-                weights[i][j] = random.nextDouble() * 2 - 1;
-            }
+    private void initializeWeights(double[] weights) {
+        // Initialize weights with random values
+        for (int i = 0; i < weights.length; i++) {
+            weights[i] = Math.random() * 2 - 1;
         }
     }
 
-    private void initializeBiases() {
-        biases = new double[outputSize];
-        for (int i = 0; i < outputSize; i++) {
-            // Initialize biases with random values between -1 and 1
-            biases[i] = random.nextDouble() * 2 - 1;
+    private void initializeBiases(double[] biases) {
+        // Initialize biases with zeros
+        for (int i = 0; i < biases.length; i++) {
+            biases[i] = 0;
         }
     }
 
     public double[] forward(double[] input) {
-        double[] output = new double[outputSize];
-        for (int j = 0; j < outputSize; j++) {
+        // Perform dot product and add biases
+        double[] output = new double[biases.length];
+        for (int i = 0; i < biases.length; i++) {
             double sum = 0;
-            for (int i = 0; i < inputSize; i++) {
-                sum += input[i] * weights[i][j];
+            for (int j = 0; j < input.length; j++) {
+                sum += weights[i * input.length + j] * input[j];
             }
-            output[j] = sum + biases[j];
+            output[i] = sum + biases[i];
         }
         return output;
     }
